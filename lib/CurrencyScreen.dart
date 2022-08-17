@@ -10,6 +10,37 @@ import 'ExchangeDetail.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
+Future<List<CurrencyExchangeRate>> fetchOnlineCurrency(http.Client client) async {
+
+  final response = await client.get(Uri.parse('http://www.floatrates.com/daily/twd.json'));
+  var json = jsonDecode(response.body);
+  // Use the compute function to run parsePhotos in a separate isolate.
+  var cuntryList  = ["usd","eur","gbp","jpy","cny","hkd","cad","aud","nzd","sgd","idr","inr","chf","krw","thb","aed","php","myr","mmk",
+    "rub","vnd","bnd","lak","gyd",'egp' ,"khr" ,"pgk"];
+  List<CurrencyExchangeRate> currenyList = [];
+  for(var ccode in cuntryList ) {
+   // print(json[ccode]['code'].toString());
+    String path =
+    File('graphics/flags/' + json[ccode]['code'].toLowerCase() + '.png')
+        .existsSync()
+        ?
+    'graphics/flags/' + json[ccode]['code'].toLowerCase() + '.png'
+        : 'graphics/flags/' + json[ccode]['code'].toLowerCase() + '.png';
+
+    currenyList.add(CurrencyExchangeRate(
+        code: json[ccode]['code'] as String,
+        alphaCode: json[ccode]['alphaCode'] as String,
+        numericCode: json[ccode]['numericCode'] as String,
+        name: json[ccode]['name'] as String,
+        rate: json[ccode]['rate'] as double,
+        date: json[ccode]['date'] as String,
+        inverseRate: json[ccode]['inverseRate'] as double,
+        thumbnailUrl: path
+    ));
+  }
+  return currenyList;// compute(parseCurrency, response.body );
+}
+
 Future<List<CurrencyExchangeRate>> fetchCurrency(http.Client client) async {
 
   final response = await client.get(Uri.parse('https://highschool.resident.ncnu.edu.tw/exchangerate.json'));
@@ -48,7 +79,7 @@ class CurrencyScreen extends StatelessWidget {
         ),
         body:
         FutureBuilder<List<CurrencyExchangeRate>>(
-            future: fetchCurrency(http.Client()),
+            future: fetchOnlineCurrency(http.Client()),
             builder: (context, snapshot) {
                      // developer.log( snapshot.data.toString() );
                     if (snapshot.hasError) {
