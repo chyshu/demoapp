@@ -7,6 +7,8 @@ import 'dart:convert';
 import 'CurrencyExchangeRate.dart';
 import 'dart:developer' as developer;
 import 'ExchangeDetail.dart';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
 
 Future<List<CurrencyExchangeRate>> fetchCurrency(http.Client client) async {
 
@@ -93,7 +95,7 @@ class CurrencyList extends StatelessWidget {
                         Align( alignment: Alignment.centerLeft,  child: Text(currency[index].date.toString()) ),
                       ],
                     ),
-                    leading:   Image.network( currency[index].thumbnailUrl ,width: 80, height:80,  ),
+                    leading:   Image( image: AssetImage(  currency[index].thumbnailUrl  ) ),
                     trailing: new Icon(Icons.chevron_right),
                     onTap: (){
                         Navigator.of(context).push(

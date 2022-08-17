@@ -10,7 +10,7 @@ class ExchangeDetail extends StatefulWidget  {
   _ExchangeDetail createState() => _ExchangeDetail();
 }
 class _ExchangeDetail extends State<ExchangeDetail> {
-
+   bool inChanged= false;
    double _TwdValue = 0;
    double _ForigenValue = 0;
    final TextEditingController ForigenValueCtrl = TextEditingController();
@@ -86,7 +86,22 @@ class _ExchangeDetail extends State<ExchangeDetail> {
             controller: TWDValueCtrl,
             inputFormatters: <TextInputFormatter>[              FilteringTextInputFormatter.digitsOnly            ], // Only numbers can be enter
             onChanged: (text) {
-
+              if(!inChanged) {
+                inChanged = true;
+                try {
+                  _TwdValue =  double.tryParse(text) ?? 0.0;
+                  String inString = _TwdValue.toStringAsFixed(0);
+                  _TwdValue= double.tryParse(inString) ?? 0.0;
+                  double f =
+                      widget.currencyExchangeRate.rate * _TwdValue;
+                  inString = f.toStringAsFixed(0);
+                  _ForigenValue = double.tryParse(inString) ?? 0.0;
+                  ForigenValueCtrl.text = _ForigenValue.toString();
+                }
+                finally {
+                  inChanged = false;
+                }
+              }
             },
           ),
           SizedBox(
@@ -100,10 +115,19 @@ class _ExchangeDetail extends State<ExchangeDetail> {
             controller: ForigenValueCtrl,
             inputFormatters: <TextInputFormatter>[              FilteringTextInputFormatter.digitsOnly            ], // Only numbers can be entered
             onChanged: (text) {
-              _ForigenValue = double.tryParse(text) ??0.0;
+              if(!inChanged) {
+                inChanged = true;
+                try {
+                  _ForigenValue = double.tryParse(text) ?? 0.0;
 
-              _TwdValue= widget.currencyExchangeRate.inverseRate*_ForigenValue;
-              TWDValueCtrl.text=_TwdValue.toString();
+                  _TwdValue =
+                      widget.currencyExchangeRate.inverseRate * _ForigenValue;
+                  TWDValueCtrl.text = _TwdValue.toString();
+                }
+                finally {
+                  inChanged = false;
+                }
+              }
             },
           )
         ],

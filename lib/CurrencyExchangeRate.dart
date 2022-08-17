@@ -1,4 +1,5 @@
 import 'dart:developer' as developer;
+import 'dart:io';
 
 class CurrencyExchangeRate {
   final String code;
@@ -22,17 +23,11 @@ class CurrencyExchangeRate {
   });
 
   factory CurrencyExchangeRate.fromJson(Map<String, dynamic> json) {
-    String url='https://www.jetpunk.com//img/user-photo-library/1a/1ae8ea63cb-450.png';
-    if(json['code'] =="USD" )
-       url= 'https://cdn.shopify.com/s/files/1/2078/5043/t/59/assets/USD.png?13296612461826194053';
-    else if(json['code'] =="GBP" )
-      url='https://www.jetpunk.com//img/user-photo-library/1a/1ae8ea63cb-450.png';
-    else if(json['code'] =="EUR" )
-      url='https://www.jetpunk.com//img/user-photo-library/1a/1ae8ea63cb-450.png';
-    else if(json['code'] =="AUD" )
-      url='https://www.jetpunk.com//img/user-photo-library/1a/1ae8ea63cb-450.png';
-    else if(json['code'] =="RUB" )
-      url='https://www.jetpunk.com//img/user-photo-library/1a/1ae8ea63cb-450.png';
+    String path=
+      File('graphics/flags/'+json['code'].toLowerCase() +'.png' ).existsSync() ?
+    'graphics/flags/'+json['code'].toLowerCase() +'.png' :'graphics/flags/'+json['code'].toLowerCase() +'.png';
+
+
     return CurrencyExchangeRate(
       code: json['code'] as String,
       alphaCode: json['alphaCode'] as String,
@@ -41,7 +36,7 @@ class CurrencyExchangeRate {
       rate: json['rate'] as double,
       date: json['date'] as String,
       inverseRate: json['inverseRate'] as double,
-        thumbnailUrl: url
+        thumbnailUrl: path
     );
   }
 }
