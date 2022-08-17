@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'DetailScreen.dart';
 import 'ToDo.dart';
 import 'CurrencyScreen.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 void main() {
 
@@ -36,6 +37,12 @@ class MyDemoAppHomePage extends StatefulWidget {
 class _MyDemoAppHomePage extends State<MyDemoAppHomePage> {
   int _counter = 0;
   int _selectedIndex = 1;
+  int _currentIndex = 0;
+  List<String> imageLists = [
+    "https://highschool.resident.ncnu.edu.tw/bg_637490651138157469.jpg",
+    "https://highschool.resident.ncnu.edu.tw/bg_637490651255032422.jpg",
+    "https://highschool.resident.ncnu.edu.tw/bg_637490651376438963.jpg",
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -95,10 +102,70 @@ class _MyDemoAppHomePage extends State<MyDemoAppHomePage> {
           padding: EdgeInsets.all(10),
         ),
       ),
-      body: Center(child:
-         Text('You have pressed the button $_counter times.\n You have selected the item $_selectedIndex',
-             style: TextStyle(  color: Colors.red, fontSize: 16, fontStyle: FontStyle.italic,)
-          ),
+      body: Container(
+            width: double.infinity,
+            child: Column(
+                children: <Widget> [
+                  CarouselSlider(
+                      items: imageLists
+                          .map(    (item) =>
+
+                                 Image.network(   item,        fit: BoxFit.cover,      ),
+
+                      ).toList(),
+                      options: CarouselOptions(
+                        height: 160,
+                        aspectRatio: 16/9,
+                        viewportFraction: 1.0,
+                        initialPage: 0,
+                        enableInfiniteScroll: true,
+                        reverse: false,
+                        autoPlay: true,
+                        autoPlayInterval: Duration(seconds: 3),
+                        autoPlayAnimationDuration: Duration(milliseconds: 800),
+                        autoPlayCurve: Curves.fastOutSlowIn,
+                        enlargeCenterPage: true,
+                        onPageChanged:  (index, reason) {
+                          setState(
+                                () {
+                                   _currentIndex = index;
+                            },
+                          );
+                        },
+                        scrollDirection: Axis.horizontal,
+                      )
+                  ),
+                  /*
+                  SizedBox(
+                    height: 200,
+                    width: MediaQuery.of(context).size.width,
+                    child: PageView.builder(
+                        itemCount: images.length,
+                        pageSnapping: true,
+
+                        onPageChanged: (page) {
+                          setState(() {
+
+                          });
+                        },
+                        itemBuilder: (context, pagePosition) {
+                          return Container(
+                            margin: EdgeInsets.all(10),
+                            child: Image.network(images[pagePosition],fit: BoxFit.cover,),
+                          );
+                        }),
+                  ),*/
+
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Center(child:
+                     Text('You have pressed the button $_counter times.\n You have selected the item $_selectedIndex',
+                         style: TextStyle(  color: Colors.red, fontSize: 16, fontStyle: FontStyle.italic,)
+                      ),
+                  ),
+                ]
+            ),
       ),
       floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add),
