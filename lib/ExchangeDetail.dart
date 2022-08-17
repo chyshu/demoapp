@@ -58,7 +58,7 @@ class _ExchangeDetail extends State<ExchangeDetail> {
 
         children: [
         Align( alignment: Alignment.centerLeft,
-          child: Image.network( widget.currencyExchangeRate.thumbnailUrl ,width: 80),
+          child: Image( image: AssetImage(   widget.currencyExchangeRate.thumbnailUrl) ,width: 80),
         ),
          SizedBox(
             height: 10,
